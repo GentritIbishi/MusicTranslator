@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private TextView lyrics_view_result;
     private EditText et_artist_name;

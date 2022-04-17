@@ -4,4 +4,7 @@
     <string name="enter_song_name">Enter song name</string>
     <string name="find_lyrics">Find Lyrics</string>
     <string name="song_lyrics_here">Song lyrics here!</string>
+    <string name="search_by_text_artist">Search by text and artist</string>
+    <string name="choose_file_to_upload">Choose File to Upload</string>
+    <string name="audio_failed_to_upload">Audio failed to upload!</string>
 </resources>
