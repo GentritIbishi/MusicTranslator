@@ -21,6 +21,7 @@ import com.squareup.okhttp.RequestBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,27 +40,6 @@ public class MainActivity extends AppCompatActivity {
         et_artist_name = findViewById(R.id.et_artist_name);
         et_song_name = findViewById(R.id.et_song_name);
         bt_findLyrisc = findViewById(R.id.bt_findLyrisc);
-
-
-//        try {
-//            final MediaType MEDIA_TYPE_MP3 = MediaType.get("audio/mpeg; charset=utf-8");
-//            File file = new File("/path/to/example.mp3");
-//            OkHttpClient client = new OkHttpClient();
-//            RequestBody data = new MultipartBody.Builder().setType(MultipartBody.FORM)
-//                    .addFormDataPart("api_token", "your api token")
-//                    .addFormDataPart("file", file.getName(),
-//                            RequestBody.Companion.create(file, MEDIA_TYPE_MP3)))
-//    .addFormDataPart("return", "apple_music,spotify").build();
-//            Request request = new Request.Builder().url("https://api.audd.io/")
-//                    .post(data).build();
-//            Response response = null;
-//            response = client.newCall(request).execute();
-//            String result = null;
-//            result = response.body().string();
-//            System.out.println(result);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
 
         bt_findLyrisc.setOnClickListener(new View.OnClickListener() {
