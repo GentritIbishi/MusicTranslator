@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blur_background"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tv_title_music_translator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Music Translator"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:paddingTop="20dp"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:id="@+id/et_artist_name"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_music_translator"
+        android:layout_marginTop="50dp"
+        android:hint="@string/enter_artist_name" />
+
+    <EditText
+        android:id="@+id/et_song_name"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_artist_name"
+        android:layout_marginTop="25dp"
+        android:hint="@string/enter_song_name" />
+
+    <Button
+        android:id="@+id/bt_findLyrisc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/find_lyrics"
+        android:textSize="20dp"
+        android:layout_below="@+id/et_song_name" />
+
+    <ScrollView
+        android:id="@+id/scrollView_lyrics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/lyrics_background"
+        android:layout_below="@id/bt_findLyrisc">
+
+        <TextView
+            android:id="@+id/lyrics_view_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/song_lyrics_here"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:lineSpacingExtra="10dp"
+            android:textSize="25dp"/>
+
+
+    </ScrollView>
+
+</RelativeLayout>

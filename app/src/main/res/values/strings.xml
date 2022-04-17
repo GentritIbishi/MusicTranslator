@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MusicTranslator</string>
+    <string name="enter_artist_name">Enter artist name</string>
+    <string name="enter_song_name">Enter song name</string>
+    <string name="find_lyrics">Find Lyrics</string>
+    <string name="song_lyrics_here">Song lyrics here!</string>
+</resources>
