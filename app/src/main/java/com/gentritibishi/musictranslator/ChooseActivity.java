@@ -124,36 +124,35 @@ public class ChooseActivity extends AppCompatActivity {
                                 try {
                                       String encodedURL = URLEncoder.encode(URL,"UTF-8");
                                       String url = "https://api.audd.io/?url=" + encodedURL + "&return="+returnAPI+"&api_token="+key;
-//
-                                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                                    RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-                                //request data json from url
-                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        try {
-                                            JSONObject result = response.getJSONObject("result");
-                                            JSONObject lyricsObj = result.getJSONObject("lyrics");
+                                    //request data json from url
+                                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            try {
+                                                JSONObject result = response.getJSONObject("result");
+                                                JSONObject lyricsObj = result.getJSONObject("lyrics");
 
-                                             lyricsfromAPI = lyricsObj.getString("lyrics");
-                                             title = result.getString("title");
-                                             artist = result.getString("artist");
+                                                 lyricsfromAPI = lyricsObj.getString("lyrics");
+                                                 title = result.getString("title");
+                                                 artist = result.getString("artist");
 
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                    }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
-                                requestQueue.add(jsonObjectRequest);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
+                                    requestQueue.add(jsonObjectRequest);
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                             }
                         });
                     }
