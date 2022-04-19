@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 
 import okhttp3.MultipartBody;
@@ -55,6 +56,9 @@ public class ChooseActivity extends AppCompatActivity {
     String urlInFirebase, name_of_file_uploaded;
     ProgressBar progressBar;
     UploadTask uploadTask;
+    String lyricsfromAPI=null;
+    String title=null;
+    String artist = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class ChooseActivity extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 String URL = uri.toString();
                                 String key = "f23b0770602f1a51658f651dcb49f3e3";
-                                String returnAPI = "apple_music,spotify";
+                                String returnAPI = "lyrics,apple_music,spotify";
 
                                 try {
                                       String encodedURL = URLEncoder.encode(URL,"UTF-8");
@@ -129,11 +133,11 @@ public class ChooseActivity extends AppCompatActivity {
                                     public void onResponse(JSONObject response) {
                                         try {
                                             JSONObject result = response.getJSONObject("result");
-                                            String title = result.getString("title");
-                                            String artist = result.getString("artist");
+                                            JSONObject lyricsObj = result.getJSONObject("lyrics");
 
-                                            Toast.makeText(ChooseActivity.this, title, Toast.LENGTH_SHORT).show();
-                                            Toast.makeText(ChooseActivity.this, artist, Toast.LENGTH_SHORT).show();
+                                             lyricsfromAPI = lyricsObj.getString("lyrics");
+                                             title = result.getString("title");
+                                             artist = result.getString("artist");
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -165,5 +169,7 @@ public class ChooseActivity extends AppCompatActivity {
                 });
 
     }
+
+
 
 }

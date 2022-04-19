@@ -41,7 +41,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String url = "https://api.lyrics.ovh/v1/" + et_artist_name.getText().toString()+ "/" +et_song_name.getText().toString();
+                String url = "https://api.lyrics.ovh/v1/" + et_artist_name.getText().toString() + "/" +et_song_name.getText().toString();
                 url.replace(" ", "20%");
 
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
