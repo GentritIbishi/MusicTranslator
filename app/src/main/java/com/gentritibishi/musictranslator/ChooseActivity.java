@@ -82,7 +82,7 @@ public class ChooseActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         mFilename = getExternalCacheDir().getAbsolutePath();
         // muna me ja ndrru me ja lon mp3 po tani duhet edhe  mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); me ndrru to Default
-        mFilename += "/audiorecordtest.3gp";
+        mFilename += "/audiorecordtest.mp4";
 
         bt_recordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -208,9 +208,9 @@ public class ChooseActivity extends AppCompatActivity {
     private void startRecording() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setOutputFile(mFilename);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
             mRecorder.prepare();
@@ -233,7 +233,7 @@ public class ChooseActivity extends AppCompatActivity {
         mProgress.setMessage("Uploading Recorded starting....");
         mProgress.show();
         String nameOnAudio = getAlphaNumericString(6);
-        StorageReference fileUploadAudio = storageReference.child("Recorded").child("record_audio.3gp");
+        StorageReference fileUploadAudio = storageReference.child("Recorded").child("record_audio.mp4");
         Uri uriAudioRecorded = Uri.fromFile(new File(mFilename));
         fileUploadAudio.putFile(uriAudioRecorded).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -261,9 +261,10 @@ public class ChooseActivity extends AppCompatActivity {
                                         JSONObject result = response.getJSONObject("result");
                                         JSONObject lyricsObj = result.getJSONObject("lyrics");
 
-                                        lyricsfromAPI = lyricsObj.getString("lyrics");
-                                        title = result.getString("title");
-                                        artist = result.getString("artist");
+                                        String lyricsFromRecorded = lyricsObj.getString("lyrics");
+                                        String titleFromRecorded = result.getString("title");
+                                        String artistFromRecorded = result.getString("artist");
+                                        Toast.makeText(ChooseActivity.this, lyricsFromRecorded, Toast.LENGTH_SHORT).show();
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
