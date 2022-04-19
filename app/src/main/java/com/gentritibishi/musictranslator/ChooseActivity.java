@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Random;
 
+import it.sauronsoftware.jave.AudioUtils;
+
 
 public class ChooseActivity extends AppCompatActivity {
 
@@ -56,11 +58,11 @@ public class ChooseActivity extends AppCompatActivity {
     String urlInFirebase, name_of_file_uploaded;
     ProgressBar progressBar;
     UploadTask uploadTask;
-    String lyricsfromAPI=null;
-    String title=null;
+    String lyricsfromAPI = null;
+    String title = null;
     String artist = null;
     MediaRecorder mRecorder;
-    String mFilename = null;
+    static String mFilename = null;
     Animation scaleUp, scaleDown;
     ProgressDialog mProgress;
 
@@ -78,11 +80,9 @@ public class ChooseActivity extends AppCompatActivity {
         scaleDown = AnimationUtils.loadAnimation(ChooseActivity.this, R.anim.scale_down);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        mFilename = Environment.getExternalStorageDirectory() + File.separator
-                + Environment.DIRECTORY_DCIM + File.separator;
+        mFilename = getExternalCacheDir().getAbsolutePath();
         // muna me ja ndrru me ja lon mp3 po tani duhet edhe  mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); me ndrru to Default
-        String generatedString = getAlphaNumericString(10);
-        mFilename += "/test.3gp";
+        mFilename += "/audiorecordtest.3gp";
 
         bt_recordAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -97,15 +97,15 @@ public class ChooseActivity extends AppCompatActivity {
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         bt_recordAudio.startAnimation(scaleUp);
                         startRecording();
+                        return true;
                     } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         bt_recordAudio.startAnimation(scaleDown);
                         stopRecording();
                     }
                 }
-                return false;
+                return true;
             }
         });
-
 
 
         bt_searchByTitle_Artist.setOnClickListener(new View.OnClickListener() {
@@ -158,8 +158,8 @@ public class ChooseActivity extends AppCompatActivity {
                                 String returnAPI = "lyrics,apple_music,spotify";
 
                                 try {
-                                      String encodedURL = URLEncoder.encode(URL,"UTF-8");
-                                      String url = "https://api.audd.io/?url=" + encodedURL + "&return="+returnAPI+"&api_token="+key;
+                                    String encodedURL = URLEncoder.encode(URL, "UTF-8");
+                                    String url = "https://api.audd.io/?url=" + encodedURL + "&return=" + returnAPI + "&api_token=" + key;
                                     RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
                                     //request data json from url
@@ -170,9 +170,9 @@ public class ChooseActivity extends AppCompatActivity {
                                                 JSONObject result = response.getJSONObject("result");
                                                 JSONObject lyricsObj = result.getJSONObject("lyrics");
 
-                                                 lyricsfromAPI = lyricsObj.getString("lyrics");
-                                                 title = result.getString("title");
-                                                 artist = result.getString("artist");
+                                                lyricsfromAPI = lyricsObj.getString("lyrics");
+                                                title = result.getString("title");
+                                                artist = result.getString("artist");
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -186,9 +186,9 @@ public class ChooseActivity extends AppCompatActivity {
                                     });
 
                                     requestQueue.add(jsonObjectRequest);
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
                     }
@@ -210,7 +210,6 @@ public class ChooseActivity extends AppCompatActivity {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(mFilename);
-        mRecorder.setMaxDuration(5000);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
@@ -222,6 +221,7 @@ public class ChooseActivity extends AppCompatActivity {
         mRecorder.start();
     }
 
+
     private void stopRecording() {
         mRecorder.stop();
         mRecorder.release();
@@ -232,18 +232,63 @@ public class ChooseActivity extends AppCompatActivity {
     private void uploadAudioRecord() {
         mProgress.setMessage("Uploading Recorded starting....");
         mProgress.show();
-        StorageReference fileUploadAudio = storageReference.child("Recorded").child("new_audio.3gp");
+        String nameOnAudio = getAlphaNumericString(6);
+        StorageReference fileUploadAudio = storageReference.child("Recorded").child("record_audio.3gp");
         Uri uriAudioRecorded = Uri.fromFile(new File(mFilename));
         fileUploadAudio.putFile(uriAudioRecorded).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 mProgress.dismiss();
+
+                fileUploadAudio.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Toast.makeText(ChooseActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                        String recURL = uri.toString();
+                        String recKey = "f23b0770602f1a51658f651dcb49f3e3";
+                        String returnAPI = "lyrics,apple_music,spotify";
+
+                        try {
+                            String rec_encodedURL = URLEncoder.encode(recURL, "UTF-8");
+                            String url_rec = "https://api.audd.io/?url=" + rec_encodedURL + "&return=" + returnAPI + "&api_token=" + recKey;
+                            RequestQueue rec_requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+                            //request data json from url
+                            JsonObjectRequest rec_jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_rec, null, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        JSONObject result = response.getJSONObject("result");
+                                        JSONObject lyricsObj = result.getJSONObject("lyrics");
+
+                                        lyricsfromAPI = lyricsObj.getString("lyrics");
+                                        title = result.getString("title");
+                                        artist = result.getString("artist");
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            rec_requestQueue.add(rec_jsonObjectRequest);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
             }
         });
     }
 
-    static String getAlphaNumericString(int n)
-    {
+    static String getAlphaNumericString(int n) {
 
         // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -258,7 +303,7 @@ public class ChooseActivity extends AppCompatActivity {
             // generate a random number between
             // 0 to AlphaNumericString variable length
             int index
-                    = (int)(AlphaNumericString.length()
+                    = (int) (AlphaNumericString.length()
                     * Math.random());
 
             // add Character one by one in end of sb
@@ -269,5 +314,13 @@ public class ChooseActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
 
+    }
 }
