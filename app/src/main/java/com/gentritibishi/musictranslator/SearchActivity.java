@@ -2,6 +2,7 @@ package com.gentritibishi.musictranslator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,16 @@ public class SearchActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             lyrics_view_result.setText(response.getString("lyrics"));
+                            String lyricsFromSearch = response.getString("lyrics");
+
+                            if(lyricsFromSearch!=null){
+                                Intent intentFromSearch = new Intent(SearchActivity.this, LyricsActivity.class);
+                                intentFromSearch.putExtra("lyrics",lyricsFromSearch);
+                                startActivity(intentFromSearch);
+                            }else {
+                                Toast.makeText(SearchActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

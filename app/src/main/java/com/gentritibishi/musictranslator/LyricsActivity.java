@@ -29,6 +29,12 @@ public class LyricsActivity extends AppCompatActivity implements AdapterView.OnI
         tv_lyricsToSet = findViewById(R.id.tv_lyricsToSet);
         spinner1 = findViewById(R.id.spinner1);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            lyricsText = extras.getString("lyrics");
+            //The key argument here must match that used in the other activity
+        }
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(LyricsActivity.this, R.array.targets, R.layout.spinner_style);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);

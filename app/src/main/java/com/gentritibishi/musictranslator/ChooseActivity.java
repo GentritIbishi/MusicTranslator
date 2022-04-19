@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,9 +39,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Random;
-
-import it.sauronsoftware.jave.AudioUtils;
 
 
 public class ChooseActivity extends AppCompatActivity {
@@ -174,6 +169,15 @@ public class ChooseActivity extends AppCompatActivity {
                                                 title = result.getString("title");
                                                 artist = result.getString("artist");
 
+                                                if(lyricsfromAPI!=null){
+                                                    Intent intentUpload = new Intent(ChooseActivity.this, LyricsActivity.class);
+                                                    intentUpload.putExtra("lyrics",lyricsfromAPI);
+                                                    startActivity(intentUpload);
+                                                }else{
+                                                    Toast.makeText(ChooseActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
+                                                }
+
+
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -264,7 +268,13 @@ public class ChooseActivity extends AppCompatActivity {
                                         String lyricsFromRecorded = lyricsObj.getString("lyrics");
                                         String titleFromRecorded = result.getString("title");
                                         String artistFromRecorded = result.getString("artist");
-                                        Toast.makeText(ChooseActivity.this, lyricsFromRecorded, Toast.LENGTH_SHORT).show();
+                                        if(lyricsFromRecorded!=null){
+                                            Intent i = new Intent(ChooseActivity.this, LyricsActivity.class);
+                                            i.putExtra("lyrics",lyricsFromRecorded);
+                                            startActivity(i);
+                                        }else{
+                                            Toast.makeText(ChooseActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
+                                        }
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();

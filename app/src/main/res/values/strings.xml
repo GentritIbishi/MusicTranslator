@@ -9,6 +9,7 @@
     <string name="audio_failed_to_upload">Audio failed to upload!</string>
     <string name="file_no_downloaded">File not downloaded!</string>
     <string name="file_failed_to_upload">File failed to upload!</string>
+    <string name="lyrics_from_recorded_audio_not_find">Lyrics from recorded audio not find</string>
     <string-array name="targets">
         <item>English</item>
         <item>Italian</item>
