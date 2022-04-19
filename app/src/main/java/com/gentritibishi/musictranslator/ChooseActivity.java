@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonObject;
 import com.squareup.okhttp.MediaType;
 
 import org.json.JSONArray;
@@ -117,20 +118,23 @@ public class ChooseActivity extends AppCompatActivity {
                                 String returnAPI = "apple_music,spotify";
 
                                 try {
-                                    String encodedURL = URLEncoder.encode(URL,"UTF-8");
+                                      String encodedURL = URLEncoder.encode(URL,"UTF-8");
                                       String url = "https://api.audd.io/?url=" + encodedURL + "&return="+returnAPI+"&api_token="+key;
-//                                    url.replace(" ", "20%");
-//                                    url.replace("&", "26%");
-
-
+//
                                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
                                 //request data json from url
-                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new com.android.volley.Response.Listener<JSONObject>() {
+                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         try {
-                                            String status = response.getString("status");
+                                            JSONObject result = response.getJSONObject("result");
+                                            String title = result.getString("title");
+                                            String artist = result.getString("artist");
+
+                                            Toast.makeText(ChooseActivity.this, title, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ChooseActivity.this, artist, Toast.LENGTH_SHORT).show();
+
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
