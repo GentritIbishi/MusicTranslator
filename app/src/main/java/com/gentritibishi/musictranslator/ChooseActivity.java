@@ -3,14 +3,22 @@ package com.gentritibishi.musictranslator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
+import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,33 +29,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.JsonObject;
-import com.squareup.okhttp.MediaType;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.util.Random;
 
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 
 public class ChooseActivity extends AppCompatActivity {
 
+    static final String LOG_TAG = "Record_log";
+    static final int RECORD_AUDIO = 1;
     int AUDIO = 0;
     @Nullable
     Uri uriAudio;
@@ -59,6 +59,10 @@ public class ChooseActivity extends AppCompatActivity {
     String lyricsfromAPI=null;
     String title=null;
     String artist = null;
+    MediaRecorder mRecorder;
+    String mFilename = null;
+    Animation scaleUp, scaleDown;
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +73,40 @@ public class ChooseActivity extends AppCompatActivity {
         bt_fileToUpload = findViewById(R.id.bt_fileToUpload);
         bt_recordAudio = findViewById(R.id.bt_recordAudio);
         progressBar = findViewById(R.id.progressBar);
+        mProgress = new ProgressDialog(this);
+        scaleUp = AnimationUtils.loadAnimation(ChooseActivity.this, R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(ChooseActivity.this, R.anim.scale_down);
 
         storageReference = FirebaseStorage.getInstance().getReference();
+        mFilename = Environment.getExternalStorageDirectory() + File.separator
+                + Environment.DIRECTORY_DCIM + File.separator;
+        // muna me ja ndrru me ja lon mp3 po tani duhet edhe  mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); me ndrru to Default
+        String generatedString = getAlphaNumericString(10);
+        mFilename += "/test.3gp";
+
+        bt_recordAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if (ActivityCompat.checkSelfPermission(ChooseActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(ChooseActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, RECORD_AUDIO);
+
+                } else {
+                    //user tapped on button
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        bt_recordAudio.startAnimation(scaleUp);
+                        startRecording();
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        bt_recordAudio.startAnimation(scaleDown);
+                        stopRecording();
+                    }
+                }
+                return false;
+            }
+        });
+
+
 
         bt_searchByTitle_Artist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +205,69 @@ public class ChooseActivity extends AppCompatActivity {
 
     }
 
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(mFilename);
+        mRecorder.setMaxDuration(5000);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void stopRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+        uploadAudioRecord();
+    }
+
+    private void uploadAudioRecord() {
+        mProgress.setMessage("Uploading Recorded starting....");
+        mProgress.show();
+        StorageReference fileUploadAudio = storageReference.child("Recorded").child("new_audio.3gp");
+        Uri uriAudioRecorded = Uri.fromFile(new File(mFilename));
+        fileUploadAudio.putFile(uriAudioRecorded).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                mProgress.dismiss();
+            }
+        });
+    }
+
+    static String getAlphaNumericString(int n)
+    {
+
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                    = (int)(AlphaNumericString.length()
+                    * Math.random());
+
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                    .charAt(index));
+        }
+
+        return sb.toString();
+    }
 
 
 }
