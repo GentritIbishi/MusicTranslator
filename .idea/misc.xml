@@ -5,9 +5,11 @@
       <map>
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/bt_default.xml" value="0.2703125" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_choose.xml" value="0.264" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_lyrics.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_search.xml" value="0.264" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_upload_to_recognition.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/spinner_style.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

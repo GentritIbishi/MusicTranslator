@@ -2,9 +2,12 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
-
 android {
     compileSdk 32
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 
     defaultConfig {
         applicationId "com.gentritibishi.musictranslator"
@@ -52,6 +55,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.konghq:unirest-java:3.11.09'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }

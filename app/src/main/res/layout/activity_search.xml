@@ -49,19 +49,19 @@
         android:id="@+id/scrollView_lyrics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/lyrics_background"
-        android:layout_below="@id/bt_findLyrisc">
+        android:layout_below="@id/bt_findLyrisc"
+        android:background="@drawable/lyrics_background">
 
         <TextView
             android:id="@+id/lyrics_view_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/song_lyrics_here"
-            android:padding="20dp"
-            android:textColor="@color/white"
-            android:textAlignment="center"
             android:lineSpacingExtra="10dp"
-            android:textSize="25dp"/>
+            android:padding="20dp"
+            android:text="@string/song_lyrics_here"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
 
 
     </ScrollView>
