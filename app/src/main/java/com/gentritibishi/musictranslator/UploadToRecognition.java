@@ -10,6 +10,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 public class UploadToRecognition extends AppCompatActivity {
@@ -43,7 +45,6 @@ public class UploadToRecognition extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 }

@@ -7,4 +7,6 @@
     <string name="search_by_text_artist">Search by text and artist</string>
     <string name="choose_file_to_upload">Choose File to Upload</string>
     <string name="audio_failed_to_upload">Audio failed to upload!</string>
+    <string name="file_no_downloaded">File not downloaded!</string>
+    <string name="file_failed_to_upload">File failed to upload!</string>
 </resources>

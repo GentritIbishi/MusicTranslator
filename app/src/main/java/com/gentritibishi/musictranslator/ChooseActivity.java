@@ -9,16 +9,40 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.okhttp.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class ChooseActivity extends AppCompatActivity {
 
@@ -29,6 +53,7 @@ public class ChooseActivity extends AppCompatActivity {
     StorageReference storageReference;
     String urlInFirebase, name_of_file_uploaded;
     ProgressBar progressBar;
+    UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +65,7 @@ public class ChooseActivity extends AppCompatActivity {
         bt_recordAudio = findViewById(R.id.bt_recordAudio);
         progressBar = findViewById(R.id.progressBar);
 
-        storageReference = FirebaseStorage.getInstance().getReference("Uploads");
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         bt_searchByTitle_Artist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,44 +87,79 @@ public class ChooseActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode == RESULT_OK){
-            if(requestCode == AUDIO){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AUDIO) {
                 uriAudio = data.getData();
-//                Cursor returnCursor =
-//                        getContentResolver().query(uriAudio, null, null, null, null);
-//                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-//                name_of_file_uploaded = returnCursor.getString(nameIndex);
-                upload();
-                progressBar.setVisibility(View.VISIBLE);
+                uploadMethod();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void upload() {
-        StorageReference filePath = storageReference.child("Audio").child(uriAudio.getLastPathSegment());
-        filePath.putFile(uriAudio).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            urlInFirebase = uri.toString();
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(ChooseActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
+    private void uploadMethod() {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
+        StorageReference imageRef = storageReferenceProfilePic.child("Audio" + "/" + uriAudio.getLastPathSegment() + ".mp3");
 
-                            // url me ja qu api qe me bo detekt kongen
+        imageRef.putFile(uriAudio)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //if the upload is successful
+                        //hiding the progress dialog
+                        //and displaying a success toast
+                        Task<Uri> uri = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                        uri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String URL = uri.toString();
+                                String key = "f23b0770602f1a51658f651dcb49f3e3";
+                                String returnAPI = "apple_music,spotify";
 
-                        }
-                    });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressBar.setVisibility(View.VISIBLE);
-                Toast.makeText(ChooseActivity.this, R.string.audio_failed_to_upload, Toast.LENGTH_SHORT).show();
-            }
-        });
+                                try {
+                                    String encodedURL = URLEncoder.encode(URL,"UTF-8");
+                                      String url = "https://api.audd.io/?url=" + encodedURL + "&return="+returnAPI+"&api_token="+key;
+//                                    url.replace(" ", "20%");
+//                                    url.replace("&", "26%");
+
+
+                                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+                                //request data json from url
+                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new com.android.volley.Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            String status = response.getString("status");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                requestQueue.add(jsonObjectRequest);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        //if the upload is not successful
+                        //hiding the progress dialog
+                        //and displaying error message
+                        Toast.makeText(getApplicationContext(), exception.getCause().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
 
     }
+
 }
