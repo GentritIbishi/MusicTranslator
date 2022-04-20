@@ -20,16 +20,16 @@
         android:theme="@style/Theme.MusicTranslator">
         <activity
             android:name=".LyricsActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".ChooseActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ChooseActivity"
-            android:exported="false">
         </activity>
         <activity
             android:name=".UploadToRecognition"

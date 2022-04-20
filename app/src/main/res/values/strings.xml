@@ -11,12 +11,12 @@
     <string name="file_failed_to_upload">File failed to upload!</string>
     <string name="lyrics_from_recorded_audio_not_find">Lyrics from recorded audio not find</string>
     <string-array name="targets">
-        <item>English</item>
-        <item>Italian</item>
-        <item>German</item>
-        <item>Estonian</item>
-        <item>French</item>
-        <item>Turkish</item>
+        <item>EN</item>
+        <item>IT</item>
+        <item>DE</item>
+        <item>ES</item>
+        <item>FR</item>
+        <item>TR</item>
     </string-array>
     
 </resources>
