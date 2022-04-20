@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "104128757810",
+    "project_id": "musictranslator-a9fa0",
+    "storage_bucket": "musictranslator-a9fa0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104128757810:android:c5c0184cd78724c48a3c2b",
+        "android_client_info": {
+          "package_name": "com.gentritibishi.musictranslator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104128757810-e5s09miit2easlhaaruvehmcgoufgoup.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfrhCbsPqucTHsPKmrZonLZa-vv5IR1yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104128757810-e5s09miit2easlhaaruvehmcgoufgoup.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
