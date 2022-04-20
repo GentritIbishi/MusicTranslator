@@ -79,63 +79,44 @@ public class LyricsActivity extends AppCompatActivity implements AdapterView.OnI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if(text.equals("EN")){
-                        // split
-                        String newStr = lyricsText.substring(0,20);
-                        String newStrEncoded = URLEncoder.encode(newStr, String.valueOf(StandardCharsets.UTF_8));
-                        OkHttpClient client = new OkHttpClient();
-                        try {
-                            // Build the request
-                            RequestBody body = new FormBody.Builder()
-                                    .add("q",newStrEncoded)
-                                    .build();
 
-                            Request request = new Request.Builder()
-                                    .url("https://google-translate1.p.rapidapi.com/language/translate/v2/detect")
-                                    .post(body)
-                                    .addHeader("content-type", "application/x-www-form-urlencoded")
-                                    .addHeader("Accept-Encoding", "application/gzip")
-                                    .addHeader("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
-                                    .addHeader("X-RapidAPI-Key", "cb5af54ae2msh8519ab6c4d423d1p1c6cd3jsn8d8003432950")
-                                    .build();
-                            Response responses = null;
+                if(text.equals("EN")){
+                    //from DETECTED LANGAUGE to EN
+                    detectLanguage();
+                    translateFun(text);
 
-                            // Reset the response code
-                            responseCode = 0;
+                }else if (text.equals("IT")){
+                    //from DETECTED LANGAUGE to IT
+                    detectLanguage();
+                    translateFun(text);
 
-                            // Make the request
-                            responses = client.newCall(request).execute();
+                }else if(text.equals("DE")){
+                    //from DETECTED LANGAUGE to DE
+                    detectLanguage();
+                    translateFun(text);
 
-                            if ((responseCode = responses.code()) == 200) {
-                                // Get response
-                                String jsonData = responses.body().string();
+                }else if(text.equals("ES")){
+                    //from DETECTED LANGAUGE to ES
+                    detectLanguage();
+                    translateFun(text);
 
-                                try {
-                                    // Transform reponse to JSon Object
-                                    JSONObject json = new JSONObject(jsonData);
-                                    JSONObject data = json.getJSONObject("data");
-                                    JSONArray detections = data.getJSONArray("detections");
-                                    JSONArray last = detections.getJSONArray(0);
-                                    JSONObject lastobj = last.getJSONObject(0);
-                                    language = lastobj.getString("language");
+                }else if(text.equals("FR")){
+                    //from DETECTED LANGAUGE to FR
+                    detectLanguage();
+                    translateFun(text);
 
-                                        Toast.makeText(LyricsActivity.this, language, Toast.LENGTH_SHORT).show();
-                                }catch (JSONException e) {
-                                    e.getMessage();
-                                }
-                            }
+                }else if(text.equals("TR")){
+                    //from DETECTED LANGAUGE to TR
+                    detectLanguage();
+                    translateFun(text);
 
-                        } catch (IOException e) {
-                            responseString = e.toString();
-                        }
-                    }
-                }catch (Exception e){
-                    Toast.makeText(LyricsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+
+
             }
         });
-    //Spinneri END
+        //Spinneri END
     }
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
@@ -149,6 +130,135 @@ public class LyricsActivity extends AppCompatActivity implements AdapterView.OnI
         os.close();
         gos.close();
         return Base64.encodeToString(os.toByteArray(),Base64.DEFAULT);
+    }
+
+    void detectLanguage(){
+        try {
+            // split
+            String newStr = lyricsText.substring(0, 20);
+            String newStrEncoded = URLEncoder.encode(newStr, String.valueOf(StandardCharsets.UTF_8));
+            OkHttpClient client = new OkHttpClient();
+            try {
+                // Build the request
+                RequestBody body = new FormBody.Builder()
+                        .add("q", newStrEncoded)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://google-translate1.p.rapidapi.com/language/translate/v2/detect")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("Accept-Encoding", "application/gzip")
+                        .addHeader("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
+                        .addHeader("X-RapidAPI-Key", "cb5af54ae2msh8519ab6c4d423d1p1c6cd3jsn8d8003432950")
+                        .build();
+                Response responses = null;
+
+                // Reset the response code
+                responseCode = 0;
+
+                // Make the request
+                responses = client.newCall(request).execute();
+
+                if ((responseCode = responses.code()) == 200) {
+                    // Get response
+                    String jsonData = responses.body().string();
+
+                    try {
+                        // Transform reponse to JSon Object
+                        JSONObject json = new JSONObject(jsonData);
+                        JSONObject data = json.getJSONObject("data");
+                        JSONArray detections = data.getJSONArray("detections");
+                        JSONArray last = detections.getJSONArray(0);
+                        JSONObject lastobj = last.getJSONObject(0);
+                        language = lastobj.getString("language");
+                        if (language != null && !language.isEmpty()) {
+                            if(language.equals("en")){
+                                spinner1.setSelection(0);
+                            }else if(language.equals("it")){
+                                spinner1.setSelection(1);
+                            }else if(language.equals("de")){
+                                spinner1.setSelection(2);
+                            }else if(language.equals("es")){
+                                spinner1.setSelection(3);
+                            }else if(language.equals("fr")){
+                                spinner1.setSelection(4);
+                            }else if(language.equals("it")){
+                                spinner1.setSelection(5);
+                            }
+                        }
+
+                        Toast.makeText(LyricsActivity.this, language, Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.getMessage();
+                    }
+                }
+
+            } catch (IOException e) {
+                responseString = e.toString();
+            }
+
+        } catch (IOException e) {
+            Toast.makeText(LyricsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void translateFun(String text) {
+        try {
+            // split
+            // String newStr = lyricsText.substring(0, 20);
+            lyricsEncoded = URLEncoder.encode(lyricsText, String.valueOf(StandardCharsets.UTF_8));
+            OkHttpClient client = new OkHttpClient();
+            try {
+                // Build the request
+                RequestBody body = new FormBody.Builder()
+                        .add("q", lyricsEncoded)
+                        .add("target", text)
+                        .add("source", language)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://google-translate1.p.rapidapi.com/language/translate/v2")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("Accept-Encoding", "application/gzip")
+                        .addHeader("X-RapidAPI-Host", "google-translate1.p.rapidapi.com")
+                        .addHeader("X-RapidAPI-Key", "0f2e369b28msh4221b47047c23d6p19e7dejsn9c97811e263a")
+                        .build();
+
+                Response responses = null;
+
+                // Reset the response code
+                responseCode = 0;
+
+                // Make the request
+                responses = client.newCall(request).execute();
+
+                if ((responseCode = responses.code()) == 200) {
+                    // Get response
+                    String jsonData = responses.body().string();
+
+                    try {
+                        // Transform reponse to JSon Object
+                        JSONObject json = new JSONObject(jsonData);
+                        JSONObject data = json.getJSONObject("data");
+                        JSONArray translations = data.getJSONArray("translations");
+                        JSONObject rec = translations.getJSONObject(0);
+                        String translatedText = rec.getString("translatedText");
+                        tv_lyricsToSet.setText(translatedText);
+
+                    } catch (JSONException e) {
+                        e.getMessage();
+                    }
+                }
+
+            } catch (IOException e) {
+                responseString = e.toString();
+            }
+
+        } catch (IOException e) {
+            Toast.makeText(LyricsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

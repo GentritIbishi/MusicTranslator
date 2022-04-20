@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -149,7 +151,7 @@ public class ChooseActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String URL = uri.toString();
-                                String key = "23345814d10ef2396f801edca7123e14";
+                                String key = "bbe36063752a344343a4e96fb630e4ef";
                                 String returnAPI = "lyrics,apple_music,spotify";
 
                                 try {
@@ -249,7 +251,7 @@ public class ChooseActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         Toast.makeText(ChooseActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
                         String recURL = uri.toString();
-                        String recKey = "23345814d10ef2396f801edca7123e14";
+                        String recKey = "bbe36063752a344343a4e96fb630e4ef";
                         String returnAPI = "lyrics,apple_music,spotify";
 
                         try {
