@@ -2,8 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="40dp"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
     android:background="@drawable/blur_background"
     tools:context=".SearchActivity">
 
@@ -11,59 +15,49 @@
         android:id="@+id/tv_title_music_translator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Music Translator"
+        android:text="Type artist and song name"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:paddingTop="20dp"
-        android:textSize="20dp"/>
+        android:textSize="25dp" />
 
     <EditText
         android:id="@+id/et_artist_name"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/tv_title_music_translator"
-        android:layout_marginTop="50dp"
-        android:hint="@string/enter_artist_name" />
+        android:background="@drawable/et_special"
+        android:hint="@string/enter_artist_name"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
     <EditText
         android:id="@+id/et_song_name"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/et_artist_name"
-        android:layout_marginTop="25dp"
-        android:hint="@string/enter_song_name" />
+        android:background="@drawable/et_special"
+        android:hint="@string/enter_song_name"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
     <Button
         android:id="@+id/bt_findLyrisc"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/et_song_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bt_default"
+        android:padding="15dp"
+        android:textAllCaps="false"
         android:text="@string/find_lyrics"
-        android:textSize="20dp"
-        android:layout_below="@+id/et_song_name" />
-
-    <ScrollView
-        android:id="@+id/scrollView_lyrics"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/bt_findLyrisc"
-        android:background="@drawable/lyrics_background">
-
-        <TextView
-            android:id="@+id/lyrics_view_result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:lineSpacingExtra="10dp"
-            android:padding="20dp"
-            android:text="@string/song_lyrics_here"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="25dp" />
-
-
-    </ScrollView>
+        android:textColor="@color/white"
+        android:textSize="20dp" />
 
 </RelativeLayout>

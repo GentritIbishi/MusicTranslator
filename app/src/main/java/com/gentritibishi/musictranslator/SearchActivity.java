@@ -2,6 +2,7 @@ package com.gentritibishi.musictranslator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,26 +23,29 @@ import org.json.JSONObject;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private TextView lyrics_view_result;
     private EditText et_artist_name;
     private EditText et_song_name;
     private Button bt_findLyrisc;
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        lyrics_view_result = findViewById(R.id.lyrics_view_result);
         et_artist_name = findViewById(R.id.et_artist_name);
         et_song_name = findViewById(R.id.et_song_name);
         bt_findLyrisc = findViewById(R.id.bt_findLyrisc);
+        mProgress = new ProgressDialog(this);
 
 
         bt_findLyrisc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                mProgress.setMessage("Finding lyrics...");
+                mProgress.setProgress(50);
+                mProgress.show();
                 String url = "https://api.lyrics.ovh/v1/" + et_artist_name.getText().toString() + "/" +et_song_name.getText().toString();
                 url.replace(" ", "20%");
 
@@ -52,15 +56,18 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            lyrics_view_result.setText(response.getString("lyrics"));
                             String lyricsFromSearch = response.getString("lyrics");
 
                             if(lyricsFromSearch!=null){
+                                mProgress.setMessage("Successfully lyrics was found!");
+                                mProgress.setProgress(100);
                                 Intent intentFromSearch = new Intent(SearchActivity.this, LyricsActivity.class);
                                 intentFromSearch.putExtra("lyrics",lyricsFromSearch);
                                 startActivity(intentFromSearch);
+                                mProgress.dismiss();
                             }else {
-                                Toast.makeText(SearchActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
+                                mProgress.setMessage("Lyrics not found!");
+                                mProgress.dismiss();
                             }
 
                         } catch (JSONException e) {
@@ -70,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, R.string.lyrics_not_found, Toast.LENGTH_SHORT).show();
                     }
                 });
 

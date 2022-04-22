@@ -9,14 +9,20 @@
     <string name="audio_failed_to_upload">Audio failed to upload!</string>
     <string name="file_no_downloaded">File not downloaded!</string>
     <string name="file_failed_to_upload">File failed to upload!</string>
-    <string name="lyrics_from_recorded_audio_not_find">Lyrics from recorded audio not find</string>
+    <string name="lyrics_from_recorded_audio_not_find">Lyrics from recorded audio not found!</string>
+    <string name="lyrics_from_uploaded_file_not_found">Lyrics from uploaded file not found!</string>
+    <string name="lyrics_not_found">Lyrics not found!</string>
+    <string name="translate_not_finded">Translate not finded</string>
+    <string name="successfully_lyrics_was_found">Successfully lyrics was found!</string>
+    <string name="success">Success!</string>
     <string-array name="targets">
-        <item>EN</item>
-        <item>IT</item>
-        <item>DE</item>
-        <item>ES</item>
-        <item>FR</item>
-        <item>TR</item>
+        <item>Choose language</item>
+        <item>en</item>
+        <item>it</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>tr</item>
     </string-array>
     
 </resources>

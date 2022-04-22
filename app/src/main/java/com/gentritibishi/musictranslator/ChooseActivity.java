@@ -10,6 +10,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,6 +53,7 @@ public class ChooseActivity extends AppCompatActivity {
     @Nullable
     Uri uriAudio;
     Button bt_searchByTitle_Artist, bt_fileToUpload, bt_recordAudio;
+    TextView tapHold;
     StorageReference storageReference;
     String urlInFirebase, name_of_file_uploaded;
     ProgressBar progressBar;
@@ -72,6 +75,7 @@ public class ChooseActivity extends AppCompatActivity {
         bt_fileToUpload = findViewById(R.id.bt_fileToUpload);
         bt_recordAudio = findViewById(R.id.bt_recordAudio);
         progressBar = findViewById(R.id.progressBar);
+        tapHold = findViewById(R.id.tapHold);
         mProgress = new ProgressDialog(this);
         scaleUp = AnimationUtils.loadAnimation(ChooseActivity.this, R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(ChooseActivity.this, R.anim.scale_down);
@@ -92,10 +96,12 @@ public class ChooseActivity extends AppCompatActivity {
                 } else {
                     //user tapped on button
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        tapHold.setText("Recognizing");
                         bt_recordAudio.startAnimation(scaleUp);
                         startRecording();
                         return true;
                     } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        tapHold.setText("Tap and hold to recognize");
                         bt_recordAudio.startAnimation(scaleDown);
                         stopRecording();
                     }
@@ -108,8 +114,18 @@ public class ChooseActivity extends AppCompatActivity {
         bt_searchByTitle_Artist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProgress.show();
                 Intent intent = new Intent(ChooseActivity.this, SearchActivity.class);
                 startActivity(intent);
+                mProgress.dismiss();
+            }
+        });
+
+        bt_searchByTitle_Artist.setOnHoverListener(new View.OnHoverListener() {
+            @Override
+            public boolean onHover(View view, MotionEvent motionEvent) {
+                bt_searchByTitle_Artist.setBackgroundResource(R.drawable.bt_default_hover);
+                return true;
             }
         });
 
@@ -135,6 +151,9 @@ public class ChooseActivity extends AppCompatActivity {
     }
 
     private void uploadMethod() {
+        mProgress.setMessage("Uploading....");
+        mProgress.setProgress(50);
+        mProgress.show();
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
         StorageReference imageRef = storageReferenceProfilePic.child("Audio" + "/" + uriAudio.getLastPathSegment() + ".mp3");
@@ -151,7 +170,7 @@ public class ChooseActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String URL = uri.toString();
-                                String key = "bbe36063752a344343a4e96fb630e4ef";
+                                String key = "30ef0c63ae847eb26f38a9a2e7e86bb6";
                                 String returnAPI = "lyrics,apple_music,spotify";
 
                                 try {
@@ -172,11 +191,14 @@ public class ChooseActivity extends AppCompatActivity {
                                                 artist = result.getString("artist");
 
                                                 if(lyricsfromAPI!=null){
+                                                    mProgress.setMessage("Successfully found!");
+                                                    mProgress.setProgress(100);
                                                     Intent intentUpload = new Intent(ChooseActivity.this, LyricsActivity.class);
                                                     intentUpload.putExtra("lyrics",lyricsfromAPI);
                                                     startActivity(intentUpload);
+                                                    mProgress.dismiss();
                                                 }else{
-                                                    Toast.makeText(ChooseActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ChooseActivity.this, R.string.lyrics_from_uploaded_file_not_found, Toast.LENGTH_SHORT).show();
                                                 }
 
 
@@ -237,6 +259,7 @@ public class ChooseActivity extends AppCompatActivity {
 
     private void uploadAudioRecord() {
         mProgress.setMessage("Uploading Recorded starting....");
+        mProgress.setProgress(50);
         mProgress.show();
         String nameOnAudio = getAlphaNumericString(6);
         StorageReference fileUploadAudio = storageReference.child("Recorded").child("record_audio.mp4");
@@ -244,14 +267,13 @@ public class ChooseActivity extends AppCompatActivity {
         fileUploadAudio.putFile(uriAudioRecorded).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                mProgress.dismiss();
-
                 fileUploadAudio.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Toast.makeText(ChooseActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                        mProgress.setMessage("Uploaded successfully!");
+                        mProgress.dismiss();
                         String recURL = uri.toString();
-                        String recKey = "bbe36063752a344343a4e96fb630e4ef";
+                        String recKey = "30ef0c63ae847eb26f38a9a2e7e86bb6";
                         String returnAPI = "lyrics,apple_music,spotify";
 
                         try {
@@ -271,9 +293,12 @@ public class ChooseActivity extends AppCompatActivity {
                                         String titleFromRecorded = result.getString("title");
                                         String artistFromRecorded = result.getString("artist");
                                         if(lyricsFromRecorded!=null){
+                                            mProgress.setProgress(100);
+                                            mProgress.setMessage("Successfully found!");
                                             Intent i = new Intent(ChooseActivity.this, LyricsActivity.class);
                                             i.putExtra("lyrics",lyricsFromRecorded);
                                             startActivity(i);
+                                            mProgress.dismiss();
                                         }else{
                                             Toast.makeText(ChooseActivity.this, R.string.lyrics_from_recorded_audio_not_find, Toast.LENGTH_SHORT).show();
                                         }
@@ -296,6 +321,8 @@ public class ChooseActivity extends AppCompatActivity {
 
                     }
                 });
+                Toast.makeText(ChooseActivity.this, "Recognition failed. Try again closer to the sound.", Toast.LENGTH_SHORT).show();
+
 
             }
         });

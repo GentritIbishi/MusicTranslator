@@ -14,16 +14,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:orientation="vertical"
         android:layout_weight="1" >
+
 
         <Button
             android:id="@+id/bt_searchByTitle_Artist"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_search"
+            android:layout_height="50dp"
             android:textAlignment="center"
+            android:textColor="@color/white"
             android:background="@drawable/bt_default"
-            android:fontFamily="sans-serif"
-            android:textSize="14dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
             android:text="@string/search_by_text_artist" />
 
     </LinearLayout>
@@ -40,8 +44,10 @@
             android:id="@+id/bt_fileToUpload"
             android:layout_width="300dp"
             android:layout_height="50dp"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            android:textColor="@color/white"
             android:background="@drawable/bt_default"
-            android:fontFamily="sans-serif"
             android:text="@string/choose_file_to_upload" />
 
     </LinearLayout>
@@ -56,6 +62,7 @@
         android:layout_weight="0.5" >
 
         <TextView
+            android:id="@+id/tapHold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

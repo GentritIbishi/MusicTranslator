@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/bt_default.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/bt_default_hover.xml" value="0.1795" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/bt_selector.xml" value="0.1795" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/et_special.xml" value="0.1795" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/ic_search.xml" value="0.1795" />
+        <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/drawable/ic_shazam240x240.xml" value="0.1795" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_choose.xml" value="0.264" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_lyrics.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/gentr/StudioProjects/MusicTranslator/app/src/main/res/layout/activity_main.xml" value="0.2" />
